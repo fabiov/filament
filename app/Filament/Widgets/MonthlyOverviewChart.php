@@ -15,9 +15,9 @@ class MonthlyOverviewChart extends ChartWidget
 {
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Monthly overview';
+    protected ?string $heading = 'Monthly overview';
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected function getMaxHeight(): ?string
     {
@@ -116,7 +116,7 @@ class MonthlyOverviewChart extends ChartWidget
             /** @var DateTime $i */
             $day = $i->format('Y-m-d');
             if (! array_filter($dailyExpenses, fn ($item) => $item->date === $day)) {
-                $objectDay = new stdClass();
+                $objectDay = new stdClass;
                 $objectDay->date = $day;
                 $objectDay->amount = 0;
                 $dailyExpenses[] = $objectDay;

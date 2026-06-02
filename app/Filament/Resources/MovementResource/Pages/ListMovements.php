@@ -8,12 +8,13 @@ use App\Filament\Resources\MovementResource;
 use Filament\Actions;
 use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Enums\Width;
 
 class ListMovements extends ListRecords
 {
     use ExposesTableToWidgets;
 
-    protected ?string $maxContentWidth = 'full';
+    protected Width|string|null $maxContentWidth = Width::Full;
 
     protected static string $resource = MovementResource::class;
 

@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 class AccountingBalancesChart extends ChartWidget
 {
-    protected static ?string $heading = 'Accounting Balances';
+    protected ?string $heading = 'Accounting Balances';
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected function getData(): array
     {

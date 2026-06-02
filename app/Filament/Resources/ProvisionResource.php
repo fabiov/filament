@@ -7,9 +7,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProvisionResource\Pages;
 use App\Models\Provision;
 use App\Models\User;
+use BackedEnum;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,11 +20,11 @@ class ProvisionResource extends Resource
 {
     protected static ?string $model = Provision::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\TextInput::make('amount')
                     ->required()
@@ -42,15 +43,15 @@ class ProvisionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->actions([Tables\Actions\EditAction::make()])
+            ->actions([\Filament\Actions\EditAction::make()])
             ->columns([
                 Tables\Columns\TextColumn::make('date')->date('d/m/Y')->sortable()->width(105),
                 Tables\Columns\TextColumn::make('amount')->money('eur')->sortable()->alignRight(),
                 Tables\Columns\TextColumn::make('description')->wrap(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->filters([
@@ -123,6 +124,9 @@ class ProvisionResource extends Resource
         /** @var User $user */
         $user = Auth::user();
 
-        return parent::getEloquentQuery()->where('user_id', '=', $user->id);
+        /** @var Builder<Provision> $query */
+        $query = parent::getEloquentQuery();
+
+        return $query->where('user_id', '=', $user->id);
     }
 }
