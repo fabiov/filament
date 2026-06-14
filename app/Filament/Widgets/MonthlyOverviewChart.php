@@ -15,9 +15,9 @@ class MonthlyOverviewChart extends ChartWidget
 {
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Monthly overview';
+    protected ?string $heading = 'Monthly overview';
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected function getMaxHeight(): ?string
     {
@@ -96,6 +96,7 @@ class MonthlyOverviewChart extends ChartWidget
      */
     public function getDailyExpenses(string $begin, string $end): array
     {
+        /** @var array<stdClass> $dailyExpenses */
         $dailyExpenses = DB::table('movements')
             ->select(['movements.date', DB::raw('SUM(movements.amount) AS amount')])
             ->join('accounts', 'movements.account_id', '=', 'accounts.id')
@@ -115,8 +116,8 @@ class MonthlyOverviewChart extends ChartWidget
         for ($i = $beginFiller; $i <= $endFiller; $i->modify('+1 day')) {
             /** @var DateTime $i */
             $day = $i->format('Y-m-d');
-            if (! array_filter($dailyExpenses, fn ($item) => $item->date === $day)) {
-                $objectDay = new stdClass();
+            if (! array_filter($dailyExpenses, fn ($item): bool => $item->date === $day)) {
+                $objectDay = new stdClass;
                 $objectDay->date = $day;
                 $objectDay->amount = 0;
                 $dailyExpenses[] = $objectDay;
