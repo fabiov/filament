@@ -1,0 +1,17 @@
+{
+  "name": "MoneyLog",
+  "short_name": "MoneyLog",
+  "description": "MoneyLog Progressive Web App",
+  "start_url": "/admin",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f59e0b",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

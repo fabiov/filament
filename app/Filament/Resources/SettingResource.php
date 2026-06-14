@@ -7,9 +7,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SettingResource\Pages;
 use App\Models\Setting;
 use App\Models\User;
+use BackedEnum;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,11 +20,11 @@ class SettingResource extends Resource
 {
     protected static ?string $model = Setting::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->schema([
             Forms\Components\TextInput::make('payday')->numeric()->step(1)->required(),
             Forms\Components\TextInput::make('months')->numeric()->step(1)->required(),
             Forms\Components\Checkbox::make('provisioning'),
@@ -39,7 +40,7 @@ class SettingResource extends Resource
                 Tables\Columns\TextColumn::make('provisioning'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                \Filament\Actions\EditAction::make(),
             ]);
     }
 
@@ -65,6 +66,9 @@ class SettingResource extends Resource
         /** @var User $user */
         $user = Auth::user();
 
-        return parent::getEloquentQuery()->where('id', '=', $user->id);
+        /** @var Builder<Setting> $query */
+        $query = parent::getEloquentQuery();
+
+        return $query->where('id', '=', $user->id);
     }
 }

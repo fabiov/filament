@@ -10,10 +10,11 @@ use App\Models\Account;
 use App\Models\Category;
 use App\Models\Movement;
 use App\Models\User;
+use BackedEnum;
 use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,14 +24,14 @@ class MovementResource extends Resource
 {
     protected static ?string $model = Movement::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         /** @var User $user */
         $user = Auth::user();
 
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\TextInput::make('amount')
                     ->required()
@@ -54,7 +55,7 @@ class MovementResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->actions([Tables\Actions\EditAction::make()])
+            ->actions([\Filament\Actions\EditAction::make()])
             ->columns([
                 Tables\Columns\TextColumn::make('date')->date('d/m/Y')->sortable()->width(105),
                 Tables\Columns\TextColumn::make('amount')->sortable()->money('eur')->alignRight(),
@@ -163,7 +164,7 @@ class MovementResource extends Resource
                 Tables\Filters\SelectFilter::make('category')
                     ->relationship('category', 'name'),
             ], Tables\Enums\FiltersLayout::AboveContentCollapsible)
-            ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])])
+            ->bulkActions([\Filament\Actions\BulkActionGroup::make([\Filament\Actions\DeleteBulkAction::make()])])
             ->defaultPaginationPageOption(25)
             ->defaultSort('date', 'DESC')
             ->persistFiltersInSession()

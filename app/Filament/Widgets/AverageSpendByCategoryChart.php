@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class AverageSpendByCategoryChart extends ChartWidget
 {
-    protected static ?string $heading = 'Average monthly spending by category';
+    protected ?string $heading = 'Average monthly spending by category';
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected function getData(): array
     {

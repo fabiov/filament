@@ -11,7 +11,7 @@ use Illuminate\Support\Number;
 
 class Balances extends BaseWidget
 {
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected function getColumns(): int
     {

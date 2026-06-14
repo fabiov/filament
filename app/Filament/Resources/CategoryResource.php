@@ -7,9 +7,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
 use App\Models\User;
+use BackedEnum;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,11 +21,11 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\TextInput::make('name'),
                 Forms\Components\Checkbox::make('active'),
@@ -37,7 +38,7 @@ class CategoryResource extends Resource
         $user = Auth::user();
 
         return $table
-            ->actions([Tables\Actions\EditAction::make()])
+            ->actions([\Filament\Actions\EditAction::make()])
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\IconColumn::make('active')->boolean(),
@@ -48,8 +49,8 @@ class CategoryResource extends Resource
                     }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultPaginationPageOption(25);
@@ -72,6 +73,9 @@ class CategoryResource extends Resource
         /** @var User $user */
         $user = Auth::user();
 
-        return parent::getEloquentQuery()->where('user_id', '=', $user->id);
+        /** @var Builder<Category> $query */
+        $query = parent::getEloquentQuery();
+
+        return $query->where('user_id', '=', $user->id);
     }
 }

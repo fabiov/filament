@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 class AccountingBalancesChart extends ChartWidget
 {
-    protected static ?string $heading = 'Accounting Balances';
+    protected ?string $heading = 'Accounting Balances';
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected function getData(): array
     {
@@ -25,7 +25,7 @@ class AccountingBalancesChart extends ChartWidget
             ->where('accounts.user_id', $user->id)
             ->where('accounts.status', 'highlight')
             ->groupBy('accounts.id', 'accounts.name')
-            ->orderBy('total', 'DESC')
+            ->orderBy('total', \SortDirection::Descending)
             ->get()
             ->toArray();
 

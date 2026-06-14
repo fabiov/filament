@@ -16,6 +16,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -61,6 +62,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => '<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#f59e0b"><link rel="apple-touch-icon" href="/icon.png"><script>if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js"); }</script>'
+            );
     }
 }

@@ -7,9 +7,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AccountResource\Pages;
 use App\Models\Account;
 use App\Models\User;
+use BackedEnum;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,11 +20,11 @@ class AccountResource extends Resource
 {
     protected static ?string $model = Account::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->schema([
             Forms\Components\TextInput::make('name')
                 ->maxLength(255)
                 ->required(),
@@ -36,7 +37,7 @@ class AccountResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->actions([Tables\Actions\EditAction::make()])
+            ->actions([\Filament\Actions\EditAction::make()])
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('status')
@@ -45,7 +46,7 @@ class AccountResource extends Resource
                     ->colors(['primary' => 'open', 'success' => 'highlight', 'danger' => 'closed']),
             ])
             ->filters([])
-            ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])])
+            ->bulkActions([\Filament\Actions\BulkActionGroup::make([\Filament\Actions\DeleteBulkAction::make()])])
             ->defaultPaginationPageOption(25);
     }
 
@@ -71,6 +72,9 @@ class AccountResource extends Resource
         /** @var User $user */
         $user = Auth::user();
 
-        return parent::getEloquentQuery()->where('user_id', '=', $user->id);
+        /** @var Builder<Account> $query */
+        $query = parent::getEloquentQuery();
+
+        return $query->where('user_id', '=', $user->id);
     }
 }
