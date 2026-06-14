@@ -10,15 +10,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @implements Scope<Model>
+ */
 class UserScope implements Scope
 {
     /**
-     * @param  Builder<User>  $builder
+     * @param  Builder<covariant Model>  $builder
      */
     public function apply(Builder $builder, Model $model): void
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = Auth::user();
-        $builder->where('user_id', $user->id);
+
+        if ($user !== null) {
+            $builder->where('user_id', $user->id);
+        }
     }
 }

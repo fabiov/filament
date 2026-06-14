@@ -96,6 +96,7 @@ class MonthlyOverviewChart extends ChartWidget
      */
     public function getDailyExpenses(string $begin, string $end): array
     {
+        /** @var array<stdClass> $dailyExpenses */
         $dailyExpenses = DB::table('movements')
             ->select(['movements.date', DB::raw('SUM(movements.amount) AS amount')])
             ->join('accounts', 'movements.account_id', '=', 'accounts.id')
@@ -115,7 +116,7 @@ class MonthlyOverviewChart extends ChartWidget
         for ($i = $beginFiller; $i <= $endFiller; $i->modify('+1 day')) {
             /** @var DateTime $i */
             $day = $i->format('Y-m-d');
-            if (! array_filter($dailyExpenses, fn ($item) => $item->date === $day)) {
+            if (! array_filter($dailyExpenses, fn ($item): bool => $item->date === $day)) {
                 $objectDay = new stdClass;
                 $objectDay->date = $day;
                 $objectDay->amount = 0;

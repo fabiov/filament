@@ -46,7 +46,7 @@ class Movement extends Model
             ->where('user_id', $userId)
             ->where('accounts.status', '<>', 'closed')
             ->groupBy('account_id')
-            ->orderBy('account_count', 'DESC');
+            ->orderBy('account_count', \SortDirection::Descending);
 
         /** @var ?stdClass $model */
         $model = $qb->first();

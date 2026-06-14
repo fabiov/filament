@@ -25,7 +25,7 @@ class AccountingBalancesChart extends ChartWidget
             ->where('accounts.user_id', $user->id)
             ->where('accounts.status', 'highlight')
             ->groupBy('accounts.id', 'accounts.name')
-            ->orderBy('total', 'DESC')
+            ->orderBy('total', \SortDirection::Descending)
             ->get()
             ->toArray();
 
